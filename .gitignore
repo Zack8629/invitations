@@ -4,6 +4,7 @@
 # My ignores
 _helps
 secret_data.py
+.idea
 
 ### Linux ###
 *~
