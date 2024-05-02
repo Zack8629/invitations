@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+{% block head %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+
+
+            {% block title %}
+                <title>
+                    Invitations App
+                </title>
+            {% endblock %}
+
+    </head>
+{% endblock %}
+
+
+
+{% block body %}
+    <body>
+        {% block nav_menu %}
+            <nav>
+                {% include 'nav_menu.html' %}
+            </nav>
+        {% endblock %}
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+            {% block footer %}
+                <footer>
+                    {% include 'footer.html' %}
+                </footer>
+            {% endblock %}
+
+        <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    </body>
+{% endblock %}
+</html>
