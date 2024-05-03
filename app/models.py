@@ -56,29 +56,40 @@ class SalutationType(db.Model):
     salutation = db.Column(db.String, unique=True, nullable=False)
 
 
+# Модель для Варианта ответа
+class ResponseOption(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    response = db.Column(db.String, nullable=False)
+
+
 # Модель для Гостя
 class Guest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    guest_type = db.Column(db.Integer, db.ForeignKey('guest_type.id'), nullable=False)
-    name_1 = db.Column(db.String, nullable=False)
-    surname_1 = db.Column(db.String)
-    name_2 = db.Column(db.String)
-    surname_2 = db.Column(db.String)
-    salutation_type_id = db.Column(db.Integer, db.ForeignKey('salutation_type.id'), nullable=False)
-    hash_id = db.Column(db.String, unique=True, nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('creator.id'), nullable=False)
-    additional_details = db.Column(db.String)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+
+    guest_type = db.Column(db.Integer, db.ForeignKey('guest_type.id'), nullable=False)
+    salutation_type_id = db.Column(db.Integer, db.ForeignKey('salutation_type.id'), nullable=False)
+
+    name = db.Column(db.String, nullable=False)
+    surname = db.Column(db.String)
+    details = db.Column(db.String)
+
     ask_plus_one = db.Column(db.Boolean)
-    ask_children = db.Column(db.Boolean)
-    children_count = db.Column(db.Integer)
-    make_paper_invitation = db.Column(db.Boolean)
     plus_ones = db.relationship('PlusOne', backref='guest', lazy=True, cascade='all, delete-orphan')
+
+    ask_children = db.Column(db.Boolean)
+    children_count = db.Column(db.Integer, default=0)
+    children = db.relationship('Child', backref='guest', lazy=True, cascade='all, delete-orphan')
+
+    make_paper_invitation = db.Column(db.Boolean)
+
     comments = db.relationship('Comment', backref='guest', lazy=True, cascade='all, delete-orphan')
     responses = db.relationship('Response', backref='guest', lazy=True, cascade='all, delete-orphan')
-    qr_code = db.relationship('QRCode', uselist=False, back_populates='guest', cascade='all, delete-orphan')
-    children = db.relationship('Child', backref='guest', lazy=True, cascade='all, delete-orphan')
+
+    hash_id = db.Column(db.String, unique=True, nullable=False)
     short_link = db.relationship('ShortLink', uselist=False, back_populates='guest', cascade='all, delete-orphan')
+    qr_code = db.relationship('QRCode', uselist=False, back_populates='guest', cascade='all, delete-orphan')
 
 
 # Модель для +1 гостя
@@ -87,6 +98,7 @@ class PlusOne(db.Model):
     guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     name = db.Column(db.String, nullable=False)
+    surname = db.Column(db.String)
     additional_info = db.Column(db.String)
 
 
@@ -97,7 +109,7 @@ class Child(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     name = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer)
-    additional_details = db.Column(db.String)
+    details = db.Column(db.String)
 
 
 # Модель для Комментария
@@ -111,15 +123,9 @@ class Comment(db.Model):
 # Модель для Ответа на приглашение
 class Response(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     response_option_id = db.Column(db.Integer, db.ForeignKey('response_option.id'), nullable=False)
-
-
-# Модель для Варианта ответа
-class ResponseOption(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    response = db.Column(db.String, nullable=False)
 
 
 # Модель для Короткой ссылки

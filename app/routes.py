@@ -15,14 +15,17 @@ def page_not_found(e):
     return render_template('404.html')
 
 
-@flask_app.route('/event/guest')
-def rsvp():
-    return render_template('rsvp.html')
+@flask_app.route('/<event>/<guest>')
+def rsvp(event, guest):
+    print(f'RSVP for event: {event}, guest: {guest}')
+    return render_template('rsvp.html',
+                           event=event,
+                           guest=guest)
 
 
 @flask_app.route('/<short_url>')
 def redirect_to_original(short_url):
-    original_url = link_shortener.redirect(short_url)
+    original_url = link_shortener.get_orig_url(short_url)
     if original_url:
         return redirect(original_url)
     else:

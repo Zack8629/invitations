@@ -18,8 +18,6 @@ from .views import (
 
 def create_app(flask):
     conf_path = os.path.abspath('config.py')
-    conf_path = 'C:/Projects/invitations/config.py'
-    print(f'{conf_path=}')
     flask.config.from_pyfile(conf_path)
 
     try:
@@ -33,16 +31,19 @@ def create_app(flask):
 
             admin.add_view(AdminRolesModelView(AdminRoles, db.session))
             admin.add_view(AdminsModelView(Admins, db.session))
+
             admin.add_view(CreatorModelView(Creator, db.session))
             admin.add_view(EventModelView(Event, db.session))
+
             admin.add_view(GuestTypeModelView(GuestType, db.session))
             admin.add_view(SalutationTypeModelView(SalutationType, db.session))
+            admin.add_view(ResponseOptionModelView(ResponseOption, db.session))
+
             admin.add_view(GuestModelView(Guest, db.session))
             admin.add_view(PlusOneModelView(PlusOne, db.session))
             admin.add_view(ChildModelView(Child, db.session))
             admin.add_view(CommentModelView(Comment, db.session))
             admin.add_view(ResponseModelView(Response, db.session))
-            admin.add_view(ResponseOptionModelView(ResponseOption, db.session))
             admin.add_view(ShortLinkModelView(ShortLink, db.session))
             admin.add_view(QRCodeModelView(QRCode, db.session, name='QR Code'))
 

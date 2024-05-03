@@ -80,6 +80,7 @@ class GuestModelView(ModelView):
         'hash_id': StringField('Hash id', render_kw={'readonly': True}),
         'short_url': URLField('Short URL', render_kw={'readonly': True}),
         'salutation_type_id': SelectField('Salutation Type'),
+        # 'children_count': StringField('Children Count', coerce=int, render_kw={'readonly': True}),
     }
 
     def create_form(self, obj=None):
@@ -110,7 +111,7 @@ class GuestModelView(ModelView):
 
             print(f'on_model_change')
 
-            original_url = link_shortener.get_orig_url(hash_event, hash_guest)
+            original_url = link_shortener.generate_orig_url(hash_event, hash_guest)
             short_url = link_shortener.generate_short_url(original_url)
 
             short_link_obj = ShortLink(
@@ -131,8 +132,10 @@ class GuestModelView(ModelView):
              f'{creator.first_name}' if creator.last_name is None else f'{creator.first_name} {creator.last_name}')
             for creator in Creator.query.all()
         ]
+        form.salutation_type_id.choices = [
+            (salutation.id, salutation.salutation) for salutation in SalutationType.query.all()
+        ]
         form.guest_type.choices = [(type_guest.id, type_guest.name) for type_guest in GuestType.query.all()]
-
         form.short_url.data = obj.short_link.short_url
 
         return form
