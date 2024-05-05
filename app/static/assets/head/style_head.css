@@ -1,0 +1,18 @@
+:root {
+    --background: #FEFAE7;
+    --dominant-color: #F9C80E;
+    --primary-color: #EA3546;
+    --secondary-color: #662E9B;
+    --success-color: #25C77C;
+    --danger-color: #C92333;
+    --warning-color: #ECB100;
+    --info-color: #0CBCE0;
+    --background-text: #000000;
+    --dominant-text: #000000;
+    --primary-text: #FFFFFF;
+    --secondary-text: #FFFFFF;
+    --success-text: #000000;
+    --danger-text: #FFFFFF;
+    --warning-text: #000000;
+    --info-text: #000000;
+}

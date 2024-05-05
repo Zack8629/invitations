@@ -184,6 +184,7 @@ class QRCodeModelView(ModelView):
 
     column_list = ('guest', 'svg_data')
     column_formatters = {
+        'guest': lambda v, c, m, p: m.guest.name,
         'svg_data': _svg_to_image,
     }
 

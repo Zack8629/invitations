@@ -99,7 +99,7 @@ class PlusOne(db.Model):
     event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     name = db.Column(db.String, nullable=False)
     surname = db.Column(db.String)
-    additional_info = db.Column(db.String)
+    details = db.Column(db.String)
 
 
 # Модель для Ребёнка

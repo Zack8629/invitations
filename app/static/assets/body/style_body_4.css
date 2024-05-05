@@ -1,0 +1,50 @@
+.cid-u5XEcsqj9J {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  background-color: transparent;
+}
+
+/* Изображение фона */
+.cid-u5XEcsqj9J .mbr-fallback-image.disabled {
+  display: none;
+}
+.cid-u5XEcsqj9J .mbr-fallback-image {
+  display: block;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+/* Подгонка отступов для разных разрешений экрана */
+@media (max-width: 767px) {
+  .cid-u5XEcsqj9J .card-content-text {
+    padding: 0 1.5rem 1.5rem;
+  }
+}
+@media (min-width: 768px) {
+  .cid-u5XEcsqj9J .card-content-text {
+    padding: 0 2.25rem 2.25rem;
+  }
+}
+@media (min-width: 992px) {
+  .cid-u5XEcsqj9J .card-content-text {
+    padding: 1rem 4rem 4rem;
+  }
+}
+
+/* Стили текста */
+.cid-u5XEcsqj9J .mbr-text,
+.cid-u5XEcsqj9J .mbr-section-btn,
+.cid-u5XEcsqj9J .card-title,
+.cid-u5XEcsqj9J .card-box {
+  color: #000000;
+  text-align: left;
+}
+
+/* Фон обертки карточки */
+.cid-u5XEcsqj9J .card-wrapper {
+  background: #ffffff;
+}

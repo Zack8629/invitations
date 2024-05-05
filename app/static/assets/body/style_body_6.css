@@ -1,0 +1,36 @@
+.cid-u5XEcsq246 {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  background-color: transparent;
+}
+.cid-u5XEcsq246 .mbr-fallback-image.disabled {
+  display: none;
+}
+.cid-u5XEcsq246 .mbr-fallback-image {
+  display: block;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+.cid-u5XEcsq246 .mbr-text {
+  color: #000000;
+}
+.cid-u5XEcsq246 .mbr-section-subtitle {
+  color: #ffffff;
+  text-align: left;
+}
+.cid-u5XEcsq246 .main-button {
+  margin-bottom: 2rem;
+}
+@media (max-width: 767px) {
+  .cid-u5XEcsq246 .main-button {
+    margin-bottom: 2rem;
+  }
+}
+.cid-u5XEcsq246 .mbr-section-subtitle,
+.cid-u5XEcsq246 .main-button {
+  color: #000000;
+}

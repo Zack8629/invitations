@@ -1,0 +1,46 @@
+/* Основные стили для контейнера */
+.cid-u5XEcsrX2W {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  background-color: #ffffff;
+}
+
+/* Стили для изображений */
+.cid-u5XEcsrX2W .item-wrapper img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50% !important;
+}
+
+/* Стили для контейнеров */
+.cid-u5XEcsrX2W .item-wrapper {
+  margin-bottom: 2rem;
+}
+
+/* Стили для заголовков, текста и иконок */
+.cid-u5XEcsrX2W .card-title,
+.cid-u5XEcsrX2W .iconfont-wrapper,
+.cid-u5XEcsrX2W .card-text {
+  color: #000000;
+  text-align: center;
+}
+
+/* Стили для контейнера с контентом */
+.cid-u5XEcsrX2W .content-head {
+  max-width: 800px;
+}
+
+/* Стили для заголовков секций и контейнеров с изображениями */
+.cid-u5XEcsrX2W .mbr-section-title,
+.cid-u5XEcsrX2W .card-title,
+.cid-u5XEcsrX2W .img-wrapper {
+  color: #000000;
+  text-align: center;
+}
+
+/* Стили для контейнера с изображениями */
+.cid-u5XEcsrX2W .img-wrapper {
+  display: flex;
+  justify-content: center;
+}

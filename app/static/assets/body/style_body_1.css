@@ -1,0 +1,121 @@
+.cid-u5XEcsogx7 {
+  position: relative;
+  width: 100%;
+  z-index: 1000;
+}
+
+.cid-u5XEcsogx7 .navbar-brand {
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: 0;
+  padding: 10px 0;
+  word-break: break-word;
+}
+
+.cid-u5XEcsogx7 .navbar-brand img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.cid-u5XEcsogx7 .navbar-brand .navbar-caption {
+  line-height: inherit !important;
+}
+
+.cid-u5XEcsogx7 .navbar-toggler {
+  transform: scale(0.8);
+}
+
+.cid-u5XEcsogx7 .navbar-nav {
+  margin: auto;
+}
+
+.cid-u5XEcsogx7 .navbar-nav .nav-item {
+  transition: 0.3s all !important;
+}
+
+.cid-u5XEcsogx7 .navbar-nav .nav-item .nav-link {
+  border-radius: 1rem !important;
+  margin: 0 !important;
+  padding: 16px !important;
+  transition: 0.3s all !important;
+}
+
+.cid-u5XEcsogx7 .navbar-nav .nav-item .nav-link:hover {
+  background-color: rgba(27, 31, 10, 0.06);
+}
+
+.cid-u5XEcsogx7 .navbar-nav .open .nav-link::after {
+  transform: rotate(180deg);
+}
+
+.cid-u5XEcsogx7 .navbar-nav .dropdown-item {
+  border-radius: 0.5rem !important;
+  margin: 0 8px !important;
+  padding: 12px !important;
+  transition: 0.3s all !important;
+}
+
+.cid-u5XEcsogx7 .navbar-nav .dropdown-item:hover {
+  background-color: rgba(27, 31, 10, 0.06);
+}
+
+.cid-u5XEcsogx7 .container {
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 100vw;
+  box-shadow: 0 30px 60px 0 rgba(27, 31, 10, 0.08);
+  display: flex;
+  flex-wrap: nowrap;
+  height: 90px;
+  justify-content: flex-end;
+  left: 0;
+  margin-top: 1rem;
+  padding: 0.5rem 0.6rem;
+  position: relative;
+  right: 0;
+}
+
+.cid-u5XEcsogx7 .container img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+.cid-u5XEcsogx7 .dropdown-menu {
+  background: #ffffff;
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 1.5rem;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-width: 100%;
+  min-width: auto;
+  padding: 12px 4px !important;
+  transition: 0.3s all !important;
+}
+
+.cid-u5XEcsogx7 .navbar {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid transparent;
+  box-shadow: none !important;
+  min-height: 90px;
+  padding: 0 !important;
+  transition: all 0.3s;
+}
+
+@media (max-width: 767px) {
+  .cid-u5XEcsogx7 .container {
+    height: 56px !important;
+    margin-top: 0rem;
+    padding-right: 1rem;
+    width: 95%;
+  }
+
+  .cid-u5XEcsogx7 .navbar {
+    min-height: 72px;
+  }
+
+  .cid-u5XEcsogx7 .navbar-brand img {
+    height: 2.5rem !important;
+    min-width: 2.5rem !important;
+  }
+}

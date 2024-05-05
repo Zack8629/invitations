@@ -102,7 +102,7 @@ class CreateAppData:
                 print(f'Ошибка при создании типа гостя: "{data['name']}"! Код ответа:{code}')
 
     def create_salutation_type(self):
-        types_salutation = ('Ты', 'Вы')
+        types_salutation = ('Ты', 'Вы', 'Дорогой', 'Дорогая', 'Дорогие')
         for type_salutation in types_salutation:
             data = {
                 'salutation': type_salutation,
@@ -138,7 +138,7 @@ class CreateAppData:
                 print(f'Ошибка при создании гостя: "{data['name']}"! Код ответа:{code}')
 
     def create_response_option(self):
-        options = ('Да', 'Не знаю', 'Нет')
+        options = ('Да', 'Нет')
         for option in options:
             data = {
                 'response': f'{option}',

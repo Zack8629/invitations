@@ -1,0 +1,151 @@
+.cid-u5XEcsq8Q3 {
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+  background: transparent;
+}
+
+/* Стили для фонового изображения */
+.cid-u5XEcsq8Q3 .mbr-fallback-image.disabled {
+  display: none;
+}
+.cid-u5XEcsq8Q3 .mbr-fallback-image {
+  display: block;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+}
+
+/* Управление контейнером на больших экранах */
+@media (min-width: 768px) {
+  .cid-u5XEcsq8Q3 .container-fluid {
+    padding: 0;
+  }
+}
+
+/* Слайды эмблы */
+.cid-u5XEcsq8Q3 .embla__slide {
+  position: relative;
+  min-width: 490px;
+  max-width: 490px;
+}
+@media (max-width: 768px) {
+  .cid-u5XEcsq8Q3 .embla__slide {
+    min-width: 100%;
+    max-width: 100%;
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+  }
+}
+
+/* Стили кнопок эмблы */
+.cid-u5XEcsq8Q3 .embla__button--next,
+.cid-u5XEcsq8Q3 .embla__button--prev {
+  display: flex;
+}
+.cid-u5XEcsq8Q3 .embla__button {
+  top: 50%;
+  width: 60px;
+  height: 60px;
+  margin-top: -1.5rem;
+  font-size: 22px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  transition: all 0.3s;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cid-u5XEcsq8Q3 .embla__button:disabled {
+  cursor: default;
+  display: none;
+}
+.cid-u5XEcsq8Q3 .embla__button.embla__button--prev {
+  left: 0;
+  margin-left: 2.5rem;
+}
+.cid-u5XEcsq8Q3 .embla__button.embla__button--next {
+  right: 0;
+  margin-right: 2.5rem;
+}
+@media (max-width: 767px) {
+  .cid-u5XEcsq8Q3 .embla__button {
+    top: auto;
+    bottom: 1rem;
+  }
+}
+
+/* Стили для контейнера эмблы */
+.cid-u5XEcsq8Q3 .embla {
+  position: relative;
+  width: 100%;
+}
+.cid-u5XEcsq8Q3 .embla__viewport {
+  overflow: hidden;
+  width: 100%;
+}
+.cid-u5XEcsq8Q3 .embla__viewport.is-draggable {
+  cursor: grab;
+}
+.cid-u5XEcsq8Q3 .embla__viewport.is-dragging {
+  cursor: grabbing;
+}
+.cid-u5XEcsq8Q3 .embla__slide a {
+  cursor: grab;
+}
+.cid-u5XEcsq8Q3 .embla__slide a:active {
+  cursor: grabbing;
+}
+.cid-u5XEcsq8Q3 .embla__container {
+  display: flex;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Дополнительные стили для контента слайда */
+.cid-u5XEcsq8Q3 .slide-content {
+  position: relative;
+  border-radius: 4px;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  flex-flow: column nowrap;
+}
+
+/* Стили для изображений */
+.cid-u5XEcsq8Q3 img,
+.cid-u5XEcsq8Q3 .item-img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+}
+
+/* Дополнительные стили для обертки элементов */
+.cid-u5XEcsq8Q3 .item-wrapper {
+  position: relative;
+}
+
+/* Максимальная ширина заголовка контента */
+.cid-u5XEcsq8Q3 .content-head {
+  max-width: 800px;
+}
+
+/* Стили для текста и заголовков */
+.cid-u5XEcsq8Q3 .mbr-section-title,
+.cid-u5XEcsq8Q3 .mbr-section-subtitle,
+.cid-u5XEcsq8Q3 .mbr-box,
+.cid-u5XEcsq8Q3 .card-title,
+.cid-u5XEcsq8Q3 .card-box {
+  color: #232323;
+  text-align: left;
+}
+
+/* Стили для overlay элементов */
+.cid-u5XEcsq8Q3 .item-menu-overlay {
+  border-radius: 2rem;
+}
