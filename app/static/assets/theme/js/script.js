@@ -1688,11 +1688,4 @@
         window.addEventListener("DOMContentLoaded", tickerItemsUpdate);
     }
 
-    if (!document.getElementById('top-1')) {
-        var e = document.createElement("section");
-        e.id = "top-1";
-        e.style = "display: none";
-        e.innerHTML = '<a href="https://ai.mobirise.com/">Mobirise AI Website Builder</a> Mobirise AI Alpha v0.01 <a href="https://mobirise.com/builder/ai-website-builder.html">AI Website Builder</a>';
-        document.body.insertBefore(e, document.body.childNodes[0]);
-    }
 }());

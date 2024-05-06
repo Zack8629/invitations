@@ -13,7 +13,8 @@ class AdminRolesModelView(ModelView):
 
 class AdminsModelView(ModelView):
     form_extra_fields = {
-        'admin_roles_id': SelectField('Admin Role', coerce=int)
+        # 'password': StringField('Password'),
+        'admin_roles_id': SelectField('Admin Role', coerce=int),
     }
 
     def create_form(self, obj=None):
@@ -80,7 +81,6 @@ class GuestModelView(ModelView):
         'hash_id': StringField('Hash id', render_kw={'readonly': True}),
         'short_url': URLField('Short URL', render_kw={'readonly': True}),
         'salutation_type_id': SelectField('Salutation Type'),
-        # 'children_count': StringField('Children Count', coerce=int, render_kw={'readonly': True}),
     }
 
     def create_form(self, obj=None):
@@ -108,8 +108,6 @@ class GuestModelView(ModelView):
             hash_guest = crypto.encrypt_data(model.id)
 
             model.hash_id = hash_guest
-
-            print(f'on_model_change')
 
             original_url = link_shortener.generate_orig_url(hash_event, hash_guest)
             short_url = link_shortener.generate_short_url(original_url)

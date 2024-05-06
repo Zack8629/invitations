@@ -1,7 +1,27 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import event
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
+
+
+class PasswordMixin:
+    password_hash = db.Column(db.String, nullable=False)
+
+    def __init__(self, password, **kwargs):
+        self.password_hash = generate_password_hash(password)
+        super().__init__(**kwargs)
+
+    @property
+    def password(self):
+        raise AttributeError("password is not a readable attribute")
+
+    @password.setter
+    def password(self, plaintext_password):
+        self.password_hash = generate_password_hash(plaintext_password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
 
 # Модель для Ролей Администраторов
@@ -11,13 +31,13 @@ class AdminRoles(db.Model):
 
 
 # Модель для Администраторов
-class Admins(db.Model):
+class Admins(db.Model, PasswordMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String)
     phone_number = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
+    # password_hash = db.Column(db.String, nullable=False)
     admin_roles_id = db.Column(db.Integer, db.ForeignKey('admin_roles.id'), nullable=False)
 
 

@@ -43,6 +43,7 @@ class CreateAppData:
                 'first_name': f'Root_Admin_{i}',
                 'email': f'Root@Admin_{i}.com',
                 'password': f'Root_Admin_{i}',
+                'password_hash': f'Root_Admin_{i}',
                 'admin_roles_id': i,
             }
             post_url = '/admin/admins/new/?url=/admin/admins/'
