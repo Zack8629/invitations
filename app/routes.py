@@ -1,5 +1,8 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, url_for, flash
 
+from app import Admins, Creator
+from app.forms import LoginForm
+from app.models import check_password
 from app.services import link_shortener
 
 flask_app = Flask(__name__)
@@ -45,3 +48,30 @@ def reg():
 @flask_app.route('/pi')
 def pi():
     return render_template('paper_invite.html')
+
+
+@flask_app.route('/create')
+def create():
+    return render_template('create.html')
+
+
+@flask_app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        admin = Admins.query.filter_by(email=form.email.data).first()
+        creator = Creator.query.filter_by(email=form.email.data).first()
+
+        # Вход в систему как администратор
+        if admin is not None and check_password(admin, form.password.data):
+            return redirect('/admin')
+
+            # Вход в систему как создатель
+        elif creator is not None and check_password(creator, form.password.data):
+            print(f'CREATE!')
+            return redirect('/create')
+
+        else:
+            flash('Неверный Emai или пароль!')
+
+    return render_template('login.html', form=form)

@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 
     <link rel="shortcut icon"
-          href="static/assets/images/favicon.ico"
+          href="{{ url_for('static', filename='assets/images/favicon.ico') }}"
           type="image/x-icon">
 
     <meta name="description"
@@ -17,15 +17,15 @@
 
     <title>Магия приглашений</title>
 
-    <link rel="stylesheet" href="static/assets/web/mobirise-icons2/mobirise2.css">
-    <link rel="stylesheet" href="static/assets/parallax/jarallax.css">
-    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap-grid.min.css">
-    <link rel="stylesheet" href="static/assets/bootstrap/css/bootstrap-reboot.min.css">
-    <link rel="stylesheet" href="static/assets/dropdown/css/style.css">
-    <link rel="stylesheet" href="static/assets/socicon/css/styles.css">
-    <link rel="stylesheet" href="static/assets/animatecss/animate.css">
-    <link rel="stylesheet" href="static/assets/theme/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/web/mobirise-icons2/mobirise2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/parallax/jarallax.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap-grid.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/bootstrap/css/bootstrap-reboot.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/dropdown/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/socicon/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/animatecss/animate.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/theme/css/style.css') }}">
 
 
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap" as="style"
@@ -33,8 +33,8 @@
     <noscript>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;700&display=swap">
     </noscript>
-    <link rel="preload" as="style" href="static/assets/mobirise/css/additional.css">
-    <link rel="stylesheet" href="static/assets/mobirise/css/additional.css" type="text/css">
+    <link rel="preload" as="style" href="{{ url_for('static', filename='assets/mobirise/css/additional.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/mobirise/css/additional.css') }}" type="text/css">
     {% endblock %}
     </head>
 
@@ -58,17 +58,17 @@
 
         <script src="{{ url_for('static', filename='assets/_main/js/main.js') }}"></script>
 
-        <script src="static/assets/parallax/jarallax.js"></script>
-        <script src="static/assets/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="static/assets/dropdown/js/navbar-dropdown.js"></script>
-        <script src="static/assets/scrollgallery/scroll-gallery.js"></script>
-        <script src="static/assets/embla/embla.min.js"></script>
-        <script src="static/assets/embla/script.js"></script>
-        <script src="static/assets/mbr-switch-arrow/mbr-switch-arrow.js"></script>
-        <script src="static/assets/smoothscroll/smooth-scroll.js"></script>
-        <script src="static/assets/ytplayer/index.js"></script>
-        <script src="static/assets/theme/js/script.js"></script>
-        <script src="static/assets/formoid/formoid.min.js"></script>
+        <script src="{{ url_for('static', filename='assets/parallax/jarallax.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/dropdown/js/navbar-dropdown.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/scrollgallery/scroll-gallery.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/embla/embla.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/embla/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/mbr-switch-arrow/mbr-switch-arrow.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/smoothscroll/smooth-scroll.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/ytplayer/index.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/theme/js/script.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/formoid/formoid.min.js') }}"></script>
 
         <script>
         (function(){
@@ -81,8 +81,8 @@
 
     {% endblock %}
 
-    <script src="static/assets/web/cookies-alert-plugin/cookies-alert-core.js"></script>
-    <script src="static/assets/web/cookies-alert-plugin/cookies-alert-script.js"></script>
+    <script src="{{ url_for('static', filename='assets/web/cookies-alert-plugin/cookies-alert-core.js') }}"></script>
+    <script src="{{ url_for('static', filename='assets/web/cookies-alert-plugin/cookies-alert-script.js') }}"></script>
     <input name="cookieData"
            type="hidden" data-cookie-cookiesAlertType='1'
            data-cookie-customDialogSelector='null'

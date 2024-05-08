@@ -5,25 +5,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 
-class PasswordMixin:
-    password_hash = db.Column(db.String, nullable=False)
-
-    def __init__(self, password, **kwargs):
-        self.password_hash = generate_password_hash(password)
-        super().__init__(**kwargs)
-
-    @property
-    def password(self):
-        raise AttributeError("password is not a readable attribute")
-
-    @password.setter
-    def password(self, plaintext_password):
-        self.password_hash = generate_password_hash(plaintext_password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-
 # Модель для Ролей Администраторов
 class AdminRoles(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,13 +12,13 @@ class AdminRoles(db.Model):
 
 
 # Модель для Администраторов
-class Admins(db.Model, PasswordMixin):
+class Admins(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String)
     phone_number = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True, nullable=False)
-    # password_hash = db.Column(db.String, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
     admin_roles_id = db.Column(db.Integer, db.ForeignKey('admin_roles.id'), nullable=False)
 
 
@@ -47,8 +28,8 @@ class Creator(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String)
     phone_number = db.Column(db.String, unique=True)
-    email = db.Column(db.String, unique=True)
-    password = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
     events = db.relationship('Event', backref='event_creator', lazy=True, cascade='all, delete-orphan')
 
 
@@ -172,3 +153,17 @@ class QRCode(db.Model):
     svg_data = db.Column(db.Text, nullable=False)
     guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     guest = db.relationship('Guest', back_populates='qr_code')
+
+
+@db.event.listens_for(Admins, 'before_insert')
+@db.event.listens_for(Creator, 'before_insert')
+def hash_creator_password(mapper, connection, target):
+    target.password_hash = generate_password_hash(target.password_hash)
+
+
+def check_password(obj, password):
+    try:
+        return check_password_hash(obj.password_hashs, password)
+
+    except Exception:
+        return False

@@ -40,11 +40,10 @@ class CreateAppData:
         for i in range(quantity):
             i = i + 1
             data = {
-                'first_name': f'Root_Admin_{i}',
-                'email': f'Root@Admin_{i}.com',
-                'password': f'Root_Admin_{i}',
-                'password_hash': f'Root_Admin_{i}',
-                'admin_roles_id': i,
+                'first_name': f'RootAdmin{i}',
+                'email': f'Root@Admin{i}.ru',
+                'password_hash': f'RootAdmin{i}',
+                'admin_roles_id': 1,
             }
             post_url = '/admin/admins/new/?url=/admin/admins/'
 
@@ -59,8 +58,9 @@ class CreateAppData:
         for i in range(quantity):
             i = i + 1
             data = {
-                'first_name': f'Создатель_{i}',
-                'password': f'Создатель_{i}',
+                'first_name': f'Создатель{i}',
+                'email': f'Создатель@{i}.ru',
+                'password_hash': f'Создатель{i}',
             }
             post_url = '/admin/creator/new/?url=/admin/creator/'
 
