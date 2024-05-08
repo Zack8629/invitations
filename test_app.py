@@ -40,9 +40,9 @@ class CreateAppData:
         for i in range(quantity):
             i = i + 1
             data = {
-                'first_name': f'RootAdmin{i}',
-                'email': f'Root@Admin{i}.ru',
-                'password_hash': f'RootAdmin{i}',
+                'first_name': f'Admin{i}',
+                'email': f'Admin{i}@Admin.ru',
+                'password_hash': f'Admin',
                 'admin_roles_id': 1,
             }
             post_url = '/admin/admins/new/?url=/admin/admins/'
@@ -58,9 +58,9 @@ class CreateAppData:
         for i in range(quantity):
             i = i + 1
             data = {
-                'first_name': f'Создатель{i}',
-                'email': f'Создатель@{i}.ru',
-                'password_hash': f'Создатель{i}',
+                'first_name': f'creator{i}',
+                'email': f'creator{i}@creator.ru',
+                'password_hash': f'creator',
             }
             post_url = '/admin/creator/new/?url=/admin/creator/'
 
@@ -153,7 +153,7 @@ class CreateAppData:
             else:
                 print(f'Ошибка при создании типа ответа: "{data['response']}"! Код ответа:{code}')
 
-    def create_all_data(self, quantity):
+    def create_all_data(self, cnt_admins, cnt_creators, cnt_events, cnt_guest):
         try:
             print('Создание категорий')
             self.admin_role()
@@ -162,14 +162,21 @@ class CreateAppData:
             self.create_response_option()
             print()
 
-            for i in range(quantity):
-                i = i + 1
-                print(f'{i} круг создания данных.')
-                self.create_admins(i)
-                self.create_creator(i)
-                self.create_event(i)
-                self.create_guest(i + 9)
-                print()
+            print('Создание администраторов')
+            self.create_admins(cnt_admins)
+            print()
+
+            print('Создание создателей')
+            self.create_creator(cnt_creators)
+            print()
+
+            print('Создание мероприятий')
+            self.create_event(cnt_events)
+            print()
+
+            print('Создание гостей')
+            self.create_guest(cnt_guest)
+            print()
 
         except Exception as err:
             print(f'ОШИБКА => {err=}')
@@ -177,9 +184,15 @@ class CreateAppData:
 
 if __name__ == '__main__':
     create = CreateAppData(BASE_URL)
+
+    cnt_admins = 3
+    cnt_creators = 5
+    cnt_events = 7
+    cnt_guest = 40
+
     dell = False
 
     if dell:
         create.dell_all_db(app, db, dell)
     else:
-        create.create_all_data(1)
+        create.create_all_data(cnt_admins, cnt_creators, cnt_events, cnt_guest)
