@@ -1,8 +1,8 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, flash
 
-from app import Admins, Creator
+# from app import Admins, Creator
 from app.forms import LoginForm
-from app.models import check_password
+from app.models import check_password, User
 from app.services import link_shortener
 
 flask_app = Flask(__name__)
@@ -59,17 +59,24 @@ def create():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        admin = Admins.query.filter_by(email=form.email.data).first()
-        creator = Creator.query.filter_by(email=form.email.data).first()
+        email = form.email.data
+        password = form.password.data
+
+        user = User.query.filter_by(email=email).first()
+
+        # admin = Admins.query.filter_by(email=email).first()
+        # creator = Creator.query.filter_by(email=email).first()
 
         # Вход в систему как администратор
-        if admin is not None and check_password(admin, form.password.data):
-            return redirect('/admin')
+        # if admin is not None and check_password(admin, password):
+        if user is not None and check_password(user, password):
+            flash('Выполнен вход Админа')
+            # return redirect('/admin')
 
             # Вход в систему как создатель
-        elif creator is not None and check_password(creator, form.password.data):
-            print(f'CREATE!')
-            return redirect('/create')
+        # elif creator is not None and check_password(creator, password):
+            # flash('Выполнен вход Создателя')
+            # return redirect('/create')
 
         else:
             flash('Неверный Emai или пароль!')

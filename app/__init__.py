@@ -4,15 +4,13 @@ from flask_admin import Admin as AdminFlask
 from flask_admin.menu import MenuLink
 
 from .models import (
-    db, AdminRoles, Admins, Creator, Event, GuestType, Guest, PlusOne,
-    Child, Comment, Response, ResponseOption, ShortLink, QRCode,
-    SalutationType
+    db, Role, User, Event, GuestType, SalutationType, Guest, PlusOne, Child, Comment, ResponseOption, Response,
+    ShortLink, QRCode,
 )
 from .views import (
-    AdminsModelView, EventModelView, GuestTypeModelView, GuestModelView, AdminRolesModelView,
-    CreatorModelView, PlusOneModelView, ChildModelView,
-    ConnectionGuestPlusOneChildModelView, CommentModelView, ResponseModelView,
-    ResponseOptionModelView, ShortLinkModelView, QRCodeModelView, SalutationTypeModelView
+    RoleModelView, UserModelView, EventModelView, GuestTypeModelView, SalutationTypeModelView, GuestModelView,
+    PlusOneModelView, ChildModelView, CommentModelView, ResponseOptionModelView, ResponseModelView, ShortLinkModelView,
+    QRCodeModelView
 )
 
 
@@ -29,22 +27,23 @@ def create_app(flask):
             admin.add_link(MenuLink(name='GO Index!', url='/'))
             admin.add_link(MenuLink(name='404', url='/404'))
 
-            admin.add_view(AdminRolesModelView(AdminRoles, db.session))
-            admin.add_view(AdminsModelView(Admins, db.session))
+            admin.add_view(RoleModelView(Role, db.session, name='Роли'))
+            admin.add_view(UserModelView(User, db.session, name='Пользователи'))
 
-            admin.add_view(CreatorModelView(Creator, db.session))
-            admin.add_view(EventModelView(Event, db.session))
+            admin.add_view(EventModelView(Event, db.session, name='Мероприятия'))
 
-            admin.add_view(GuestTypeModelView(GuestType, db.session))
-            admin.add_view(SalutationTypeModelView(SalutationType, db.session))
-            admin.add_view(ResponseOptionModelView(ResponseOption, db.session))
+            admin.add_view(GuestTypeModelView(GuestType, db.session, name='Типы гостей'))
+            admin.add_view(SalutationTypeModelView(SalutationType, db.session, name='Типы приветствия'))
 
-            admin.add_view(GuestModelView(Guest, db.session))
-            admin.add_view(PlusOneModelView(PlusOne, db.session))
-            admin.add_view(ChildModelView(Child, db.session))
-            admin.add_view(CommentModelView(Comment, db.session))
-            admin.add_view(ResponseModelView(Response, db.session))
-            admin.add_view(ShortLinkModelView(ShortLink, db.session))
+            admin.add_view(GuestModelView(Guest, db.session, name='Гости'))
+            admin.add_view(PlusOneModelView(PlusOne, db.session, name='Плюс один'))
+            admin.add_view(ChildModelView(Child, db.session, name='Дети'))
+            admin.add_view(CommentModelView(Comment, db.session, name='Комментарии'))
+
+            admin.add_view(ResponseOptionModelView(ResponseOption, db.session, name='Варианты ответов'))
+            admin.add_view(ResponseModelView(Response, db.session, name='Ответы'))
+
+            admin.add_view(ShortLinkModelView(ShortLink, db.session, name='Короткие ссылки'))
             admin.add_view(QRCodeModelView(QRCode, db.session, name='QR Code'))
 
     except ValueError as V_err:

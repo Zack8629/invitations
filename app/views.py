@@ -3,47 +3,48 @@ from markupsafe import Markup
 from wtforms import SelectField
 from wtforms.fields.simple import StringField, URLField
 
-from app.models import db, AdminRoles, Creator, Event, GuestType, ShortLink, SalutationType, QRCode
+from app.models import db, User, Event, GuestType, SalutationType, ShortLink, QRCode, Role
 from app.services import crypto, link_shortener, generate_qr
 
 
-class AdminRolesModelView(ModelView):
+class RoleModelView(ModelView):
     pass
 
 
-class AdminsModelView(ModelView):
+class UserModelView(ModelView):
+    column_exclude_list = ['password_hash']
     form_extra_fields = {
-        # 'password': StringField('Password'),
-        'admin_roles_id': SelectField('Admin Role', coerce=int),
+        'role_id': SelectField('Роль', coerce=int),
+        'password_hash': StringField('Пароль'),
     }
 
     def create_form(self, obj=None):
-        form = super(AdminsModelView, self).create_form(obj)
-        form.admin_roles_id.choices = [(role.id, role.role_name) for role in AdminRoles.query.all()]
+        form = super(UserModelView, self).create_form(obj)
+        form.role_id.choices = [(role.id, role.name) for role in Role.query.all()]
+
         return form
 
     def edit_form(self, obj=None):
-        form = super(AdminsModelView, self).edit_form(obj)
-        form.admin_roles_id.choices = [(role.id, role.role_name) for role in AdminRoles.query.all()]
+        form = super(UserModelView, self).edit_form(obj)
+        form.role_id.choices = [(role.id, role.name) for role in Role.query.all()]
+
+        delattr(form, 'password_hash')
+
         return form
-
-
-class CreatorModelView(ModelView):
-    pass
 
 
 class EventModelView(ModelView):
     form_extra_fields = {
-        'creator_id': SelectField('Creator', coerce=int),
+        'user_id': SelectField('Creator', coerce=int),
         'hash_id': StringField('Hash id', render_kw={'readonly': True}),
     }
 
     def create_form(self, obj=None):
         form = super(EventModelView, self).create_form(obj)
-        form.creator_id.choices = [
-            (creator.id,
-             f'{creator.first_name}' if creator.last_name is None else f'{creator.first_name} {creator.last_name}')
-            for creator in Creator.query.all()
+        form.user_id.choices = [
+            (user.id,
+             f'{user.name}' if user.surname is None else f'{user.name} {user.surname}')
+            for user in User.query.all()
         ]
         form.hash_id.render_kw = {'readonly': True}
 
@@ -51,10 +52,10 @@ class EventModelView(ModelView):
 
     def edit_form(self, obj=None):
         form = super(EventModelView, self).edit_form(obj)
-        form.creator_id.choices = [
-            (creator.id,
-             f'{creator.first_name}' if creator.last_name is None else f'{creator.first_name} {creator.last_name}')
-            for creator in Creator.query.all()
+        form.user_id.choices = [
+            (user.id,
+             f'{user.name}' if user.surname is None else f'{user.name} {user.surname}')
+            for user in User.query.all()
         ]
         form.hash_id.render_kw = {'readonly': True}
 
@@ -75,36 +76,33 @@ class SalutationTypeModelView(ModelView):
 
 class GuestModelView(ModelView):
     form_extra_fields = {
-        'event_id': SelectField('Event', coerce=int),
-        'creator_id': SelectField('Creator', coerce=int),
-        'guest_type': SelectField('Guest Type', coerce=int),
+        'event_id': SelectField('Мероприятие', coerce=int),
+        'user_id': SelectField('Создатель мероприятия', coerce=int),
+        'guest_type_id': SelectField('Тип гостя', coerce=int),
+        'salutation_type_id': SelectField('Salutation Type'),
         'hash_id': StringField('Hash id', render_kw={'readonly': True}),
         'short_url': URLField('Short URL', render_kw={'readonly': True}),
-        'salutation_type_id': SelectField('Salutation Type'),
     }
 
     def create_form(self, obj=None):
         form = super(GuestModelView, self).create_form(obj)
-        form.event_id.choices = [(event.id, event.event_name) for event in Event.query.all()]
+        form.event_id.choices = [(event.id, event.name) for event in Event.query.all()]
         form.salutation_type_id.choices = [
-            (salutation.id, salutation.salutation) for salutation in SalutationType.query.all()
+            (salutation.id, salutation.name) for salutation in SalutationType.query.all()
         ]
-        form.creator_id.choices = [
-            (creator.id,
-             f'{creator.first_name}' if creator.last_name is None else f'{creator.first_name} {creator.last_name}')
-            for creator in Creator.query.all()
+        form.user_id.choices = [
+            (user.id,
+             f'{user.name}' if user.surname is None else f'{user.name} {user.surname}')
+            for user in User.query.all()
         ]
-        form.guest_type.choices = [(type_guest.id, type_guest.name) for type_guest in GuestType.query.all()]
+        form.guest_type_id.choices = [(type_guest.id, type_guest.name) for type_guest in GuestType.query.all()]
 
         return form
 
     def on_model_change(self, form, model, is_created):
         if is_created:
-            db.session.add(model)
-
             event_id = form.event_id.data
-
-            hash_event = crypto.encrypt_data(event_id)
+            hash_event = Event.query.get(event_id).hash_id
             hash_guest = crypto.encrypt_data(model.id)
 
             model.hash_id = hash_guest
@@ -113,11 +111,11 @@ class GuestModelView(ModelView):
             short_url = link_shortener.generate_short_url(original_url)
 
             short_link_obj = ShortLink(
-                guest_id=model.id, short_url=short_url, original_url=original_url,
+                short_url=short_url, original_url=original_url, event_id=event_id, guest_id=model.id,
             )
 
             svg_data = generate_qr.gen_text(short_url)
-            qr_obj = QRCode(svg_data=svg_data, guest_id=model.id)
+            qr_obj = QRCode(svg_data=svg_data, event_id=event_id, guest_id=model.id)
 
             db.session.add(short_link_obj)
             db.session.add(qr_obj)
@@ -125,15 +123,15 @@ class GuestModelView(ModelView):
     def edit_form(self, obj=None):
         form = super(GuestModelView, self).edit_form(obj)
         form.event_id.choices = [(event.id, event.event_name) for event in Event.query.all()]
-        form.creator_id.choices = [
-            (creator.id,
-             f'{creator.first_name}' if creator.last_name is None else f'{creator.first_name} {creator.last_name}')
-            for creator in Creator.query.all()
+        form.user_id.choices = [
+            (user.id,
+             f'{user.name}' if user.surname is None else f'{user.name} {user.surname}')
+            for user in User.query.all()
         ]
         form.salutation_type_id.choices = [
-            (salutation.id, salutation.salutation) for salutation in SalutationType.query.all()
+            (salutation.id, salutation.name) for salutation in SalutationType.query.all()
         ]
-        form.guest_type.choices = [(type_guest.id, type_guest.name) for type_guest in GuestType.query.all()]
+        form.guest_type_id.choices = [(type_guest.id, type_guest.name) for type_guest in GuestType.query.all()]
         form.short_url.data = obj.short_link.short_url
 
         return form
@@ -147,19 +145,15 @@ class ChildModelView(ModelView):
     pass
 
 
-class ConnectionGuestPlusOneChildModelView(ModelView):
-    pass
-
-
 class CommentModelView(ModelView):
     pass
 
 
-class ResponseModelView(ModelView):
+class ResponseOptionModelView(ModelView):
     pass
 
 
-class ResponseOptionModelView(ModelView):
+class ResponseModelView(ModelView):
     pass
 
 

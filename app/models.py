@@ -1,76 +1,80 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import event
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
 
 
-# Модель для Ролей Администраторов
-class AdminRoles(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    role_name = db.Column(db.String, nullable=False)
+class ForeignKeyMixin:
+    __abstract__ = True
+
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
+    guest_id = db.Column(db.Integer, db.ForeignKey('guests.id'), nullable=False)
 
 
-# Модель для Администраторов
-class Admins(db.Model):
+# Модель роли пользователя
+class Role(db.Model):
+    __tablename__ = 'roles'
+
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String, nullable=False)
-    last_name = db.Column(db.String)
+    name = db.Column(db.String, nullable=False, unique=True)
+    users = db.relationship('User', backref='role', lazy=True)
+
+
+# Модель пользователя
+class User(db.Model):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    surname = db.Column(db.String)
     phone_number = db.Column(db.String, unique=True)
     email = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
-    admin_roles_id = db.Column(db.Integer, db.ForeignKey('admin_roles.id'), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+
+    events = db.relationship('Event', backref='created_events', lazy=True, cascade='all, delete-orphan')
 
 
-# Модель для Создателя пригласительных
-class Creator(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String, nullable=False)
-    last_name = db.Column(db.String)
-    phone_number = db.Column(db.String, unique=True)
-    email = db.Column(db.String, unique=True, nullable=False)
-    password_hash = db.Column(db.String, nullable=False)
-    events = db.relationship('Event', backref='event_creator', lazy=True, cascade='all, delete-orphan')
-
-
-# Модель для Мероприятия
+# Модель Мероприятия
 class Event(db.Model):
+    __tablename__ = 'events'
+
     id = db.Column(db.Integer, primary_key=True)
-    event_name = db.Column(db.String, nullable=False)
-    event_date = db.Column(db.Date)
-    event_time = db.Column(db.Time)
+    name = db.Column(db.String, nullable=False)
+    date = db.Column(db.Date)
+    time = db.Column(db.Time)
     location = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     hash_id = db.Column(db.String, unique=True, nullable=False)
-    creator_id = db.Column(db.Integer, db.ForeignKey('creator.id'), nullable=False)
     guests = db.relationship('Guest', backref='event', lazy=True, cascade='all, delete-orphan')
 
 
 # Модель типов гостей
 class GuestType(db.Model):
+    __tablename__ = 'guest_types'
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
 
 
-# Модель типа приветствия
+# Модель типов приветствия гостей
 class SalutationType(db.Model):
+    __tablename__ = 'salutation_types'
+
     id = db.Column(db.Integer, primary_key=True)
-    salutation = db.Column(db.String, unique=True, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
 
 
-# Модель для Варианта ответа
-class ResponseOption(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    response = db.Column(db.String, nullable=False)
-
-
-# Модель для Гостя
+# Модель Гостя
 class Guest(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    creator_id = db.Column(db.Integer, db.ForeignKey('creator.id'), nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
+    __tablename__ = 'guests'
 
-    guest_type = db.Column(db.Integer, db.ForeignKey('guest_type.id'), nullable=False)
-    salutation_type_id = db.Column(db.Integer, db.ForeignKey('salutation_type.id'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
+
+    guest_type_id = db.Column(db.Integer, db.ForeignKey('guest_types.id'), nullable=False)
+    salutation_type_id = db.Column(db.Integer, db.ForeignKey('salutation_types.id'), nullable=False)
 
     name = db.Column(db.String, nullable=False)
     surname = db.Column(db.String)
@@ -93,77 +97,88 @@ class Guest(db.Model):
     qr_code = db.relationship('QRCode', uselist=False, back_populates='guest', cascade='all, delete-orphan')
 
 
-# Модель для +1 гостя
-class PlusOne(db.Model):
+# Модель +1 гостя
+class PlusOne(db.Model, ForeignKeyMixin):
+    __tablename__ = 'plus_one'
+
     id = db.Column(db.Integer, primary_key=True)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     name = db.Column(db.String, nullable=False)
     surname = db.Column(db.String)
     details = db.Column(db.String)
 
 
-# Модель для Ребёнка
-class Child(db.Model):
+# Модель Ребёнка
+class Child(db.Model, ForeignKeyMixin):
+    __tablename__ = 'children'
+
     id = db.Column(db.Integer, primary_key=True)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
     name = db.Column(db.String, nullable=False)
     age = db.Column(db.Integer)
     details = db.Column(db.String)
 
 
-# Модель для Комментария
-class Comment(db.Model):
+# Модель Комментария
+class Comment(db.Model, ForeignKeyMixin):
+    __tablename__ = 'comments'
+
     id = db.Column(db.Integer, primary_key=True)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     text = db.Column(db.Text)
 
 
+# Модель Вариантов ответа
+class ResponseOption(db.Model):
+    __tablename__ = 'response_options'
+
+    id = db.Column(db.Integer, primary_key=True)
+    response = db.Column(db.String, nullable=False)
+
+
 # Модель для Ответа на приглашение
-class Response(db.Model):
+class Response(db.Model, ForeignKeyMixin):
+    __tablename__ = 'responses'
+
     id = db.Column(db.Integer, primary_key=True)
-    event_id = db.Column(db.Integer, db.ForeignKey('event.id'), nullable=False)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
-    response_option_id = db.Column(db.Integer, db.ForeignKey('response_option.id'), nullable=False)
+    response_option_id = db.Column(db.Integer, db.ForeignKey('response_options.id'), nullable=False)
 
 
-# Модель для Короткой ссылки
-class ShortLink(db.Model):
+# Модель Короткой ссылки
+class ShortLink(db.Model, ForeignKeyMixin):
+    __tablename__ = 'short_links'
+
     id = db.Column(db.Integer, primary_key=True)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     short_url = db.Column(db.String, nullable=False, unique=True)
     original_url = db.Column(db.String, nullable=False, unique=True)
     guest = db.relationship('Guest', back_populates='short_link')
 
 
-# @event.listens_for(ShortLink, 'before_delete')
-# def before_delete_short_link(mapper, connection, target):
-#     if target.guest is not None:
-#         raise Exception(
-#             f'!@#$%! !ShortLink=> {target} невозможно удалить, поскольку она связана с гостем=> {target.guest}!'
-#         )
-
-
-class QRCode(db.Model):
-    __tablename__ = 'qr_code'
+# Модель QR-кода
+class QRCode(db.Model, ForeignKeyMixin):
+    __tablename__ = 'qr_codes'
 
     id = db.Column(db.Integer, primary_key=True)
     svg_data = db.Column(db.Text, nullable=False)
-    guest_id = db.Column(db.Integer, db.ForeignKey('guest.id'), nullable=False)
     guest = db.relationship('Guest', back_populates='qr_code')
 
 
-@db.event.listens_for(Admins, 'before_insert')
-@db.event.listens_for(Creator, 'before_insert')
-def hash_creator_password(mapper, connection, target):
+@db.event.listens_for(User, 'before_insert')
+def create_password_hash(mapper, connection, target):
     target.password_hash = generate_password_hash(target.password_hash)
 
 
 def check_password(obj, password):
     try:
-        return check_password_hash(obj.password_hashs, password)
+        return check_password_hash(obj.password_hash, password)
+
+    except ValueError:
+        return False
 
     except Exception:
+        print(f'check_password Exception => {Exception}')
         return False
+
+
+# Создание индексов и уникальных ограничений
+db.Index('idx_users_email', User.email, unique=True)
+db.Index('idx_users_phone_number', User.phone_number, unique=True)
+db.Index('idx_events_hash_id', Event.hash_id, unique=True)
+db.Index('idx_guests_hash_id', Guest.hash_id, unique=True)

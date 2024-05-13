@@ -17,75 +17,73 @@ class CreateAppData:
                 _db.drop_all()
                 print(f'All db data has been deleted')
 
-    def send_request(self, post_url, data):
+    def send_post_request(self, post_url, data):
         response = requests.post(self.base_url + post_url, data=data)
         return response.status_code
 
-    def admin_role(self):
-        roles = ('Root', 'Admin')
+    def create_role(self):
+        roles = ('Root', 'Admin', 'Пользователь')
         for role in roles:
             data = {
-                'role_name': role
+                'name': role
             }
-            post_url = '/admin/adminroles/new/?url=/admin/adminroles/'
+            post_url = '/admin/role/new/?url=/admin/role/'
 
-            code = self.send_request(post_url, data)
+            code = self.send_post_request(post_url, data)
 
             if code == 200:
-                print(f'Роль админа: "{data['role_name']}" успешно создан! Код ответа:{code}')
+                print(f'Роль: "{data['name']}" успешно создана! Код ответа:{code}')
             else:
-                print(f'Ошибка при создании роли админа: "{data['role_name']}"! Код ответа:{code}')
+                print(f'Ошибка при создании роли: "{data['name']}"! Код ответа:{code}')
+        print()
 
-    def create_admins(self, quantity):
-        for i in range(quantity):
-            i = i + 1
-            data = {
-                'first_name': f'Admin{i}',
-                'email': f'Admin{i}@Admin.ru',
-                'password_hash': f'Admin',
-                'admin_roles_id': 1,
-            }
-            post_url = '/admin/admins/new/?url=/admin/admins/'
+    def create_users(self, quantity):
+        if quantity > 0:
+            print('Создание Пользователей')
 
-            code = self.send_request(post_url, data)
+            for i in range(quantity):
+                i = i + 1
 
-            if code == 200:
-                print(f'Админ: "{data['first_name']}" успешно создан! Код ответа:{code}')
-            else:
-                print(f'Ошибка при создании админа: "{data['first_name']}"! Код ответа:{code}')
+                if i == 1:
+                    role_id = 1
+                else:
+                    role_id = 3
 
-    def create_creator(self, quantity):
-        for i in range(quantity):
-            i = i + 1
-            data = {
-                'first_name': f'creator{i}',
-                'email': f'creator{i}@creator.ru',
-                'password_hash': f'creator',
-            }
-            post_url = '/admin/creator/new/?url=/admin/creator/'
+                data = {
+                    'name': f'{i}User',
+                    'email': f'{i}User@User.ru',
+                    'password_hash': f'User',
+                    'role_id': role_id,
+                }
+                post_url = '/admin/user/new/?url=/admin/user/'
 
-            code = self.send_request(post_url, data)
+                code = self.send_post_request(post_url, data)
 
-            if code == 200:
-                print(f'Создатель: "{data['first_name']}" успешно создан! Код ответа:{code}')
-            else:
-                print(f'Ошибка при создании создателя: "{data['first_name']}"! Код ответа:{code}')
+                if code == 200:
+                    print(f'Пользователь: "{data['name']}" успешно создан! Код ответа:{code}')
+                else:
+                    print(f'Ошибка при создании пользователя: "{data['name']}"! Код ответа:{code}')
+            print()
 
     def create_event(self, quantity):
-        for i in range(quantity):
-            i = i + 1
-            data = {
-                'event_name': f'Мероприятие_{i}',
-                'creator_id': i,
-            }
-            post_url = '/admin/event/new/?url=/admin/event/'
+        if quantity > 0:
+            print('Создание Мероприятий')
 
-            code = self.send_request(post_url, data)
+            for i in range(quantity):
+                i = i + 1
+                data = {
+                    'name': f'{i}Мероприятие',
+                    'user_id': i,
+                }
+                post_url = '/admin/event/new/?url=/admin/event/'
 
-            if code == 200:
-                print(f'Мероприятие: "{data['event_name']}" успешно создано! Код ответа:{code}')
-            else:
-                print(f'Ошибка при создании мероприятия: "{data['event_name']}"! Код ответа:{code}')
+                code = self.send_post_request(post_url, data)
+
+                if code == 200:
+                    print(f'Мероприятие: "{data['name']}" успешно создано! Код ответа:{code}')
+                else:
+                    print(f'Ошибка при создании мероприятия: "{data['name']}"! Код ответа:{code}')
+            print()
 
     def create_guest_type(self):
         types_guests = ('Гость', 'Пара', 'Семья')
@@ -95,48 +93,54 @@ class CreateAppData:
             }
             post_url = '/admin/guesttype/new/?url=/admin/guesttype/'
 
-            code = self.send_request(post_url, data)
+            code = self.send_post_request(post_url, data)
 
             if code == 200:
                 print(f'Тип гостя: "{data['name']}" успешно создан! Код ответа:{code}')
             else:
                 print(f'Ошибка при создании типа гостя: "{data['name']}"! Код ответа:{code}')
+        print()
 
     def create_salutation_type(self):
         types_salutation = ('Ты', 'Вы', 'Дорогой', 'Дорогая', 'Дорогие')
-        for type_salutation in types_salutation:
+        for name in types_salutation:
             data = {
-                'salutation': type_salutation,
+                'name': name,
             }
             post_url = '/admin/salutationtype/new/?url=/admin/salutationtype/'
 
-            code = self.send_request(post_url, data)
+            code = self.send_post_request(post_url, data)
 
             if code == 200:
-                print(f'Тип приветствия: "{data['salutation']}" успешно создан! Код ответа:{code}')
+                print(f'Тип приветствия: "{data['name']}" успешно создан! Код ответа:{code}')
             else:
-                print(f'Ошибка при создании типа приветствия: "{data['salutation']}"! Код ответа:{code}')
+                print(f'Ошибка при создании типа приветствия: "{data['name']}"! Код ответа:{code}')
+        print()
 
     def create_guest(self, quantity):
-        for i in range(quantity):
-            i = i + 1
-            data = {
-                'creator_id': 1,
-                'event_id': 1,
+        if quantity > 0:
+            print('Создание Гостей')
 
-                'guest_type': 1,
-                'salutation_type_id': 1,
+            for i in range(quantity):
+                i = i + 1
+                data = {
+                    'user_id': 1,
+                    'event_id': 1,
 
-                'name': f'Гость_{i}',
-            }
-            post_url = '/admin/guest/new/?url=/admin/guest/'
+                    'guest_type_id': 1,
+                    'salutation_type_id': 1,
 
-            code = self.send_request(post_url, data)
+                    'name': f'{i}Гость',
+                }
+                post_url = '/admin/guest/new/?url=/admin/guest/'
 
-            if code == 200:
-                print(f'Гость: "{data['name']}" успешно создан! Код ответа:{code}')
-            else:
-                print(f'Ошибка при создании гостя: "{data['name']}"! Код ответа:{code}')
+                code = self.send_post_request(post_url, data)
+
+                if code == 200:
+                    print(f'Гость: "{data['name']}" успешно создан! Код ответа:{code}')
+                else:
+                    print(f'Ошибка при создании гостя: "{data['name']}"! Код ответа:{code}')
+            print()
 
     def create_response_option(self):
         options = ('Да', 'Нет')
@@ -146,37 +150,27 @@ class CreateAppData:
             }
             post_url = '/admin/responseoption/new/?url=/admin/responseoption/'
 
-            code = self.send_request(post_url, data)
+            code = self.send_post_request(post_url, data)
 
             if code == 200:
                 print(f'Тип ответа: "{data['response']}" успешно создан! Код ответа:{code}')
             else:
                 print(f'Ошибка при создании типа ответа: "{data['response']}"! Код ответа:{code}')
+        print()
 
-    def create_all_data(self, cnt_admins, cnt_creators, cnt_events, cnt_guest):
+    def create_all_data(self, _create_types, _cnt_users, _cnt_events, _cnt_guests):
         try:
-            print('Создание категорий')
-            self.admin_role()
-            self.create_guest_type()
-            self.create_salutation_type()
-            self.create_response_option()
-            print()
+            if _create_types:
+                print('Создание категорий')
+                self.create_role()
+                self.create_guest_type()
+                self.create_salutation_type()
+                self.create_response_option()
+                print()
 
-            print('Создание администраторов')
-            self.create_admins(cnt_admins)
-            print()
-
-            print('Создание создателей')
-            self.create_creator(cnt_creators)
-            print()
-
-            print('Создание мероприятий')
-            self.create_event(cnt_events)
-            print()
-
-            print('Создание гостей')
-            self.create_guest(cnt_guest)
-            print()
+            self.create_users(_cnt_users)
+            self.create_event(_cnt_events)
+            self.create_guest(_cnt_guests)
 
         except Exception as err:
             print(f'ОШИБКА => {err=}')
@@ -185,14 +179,15 @@ class CreateAppData:
 if __name__ == '__main__':
     create = CreateAppData(BASE_URL)
 
-    cnt_admins = 3
-    cnt_creators = 5
-    cnt_events = 7
-    cnt_guest = 40
+    create_types = True
+
+    cnt_users = 20
+    cnt_events = 20
+    cnt_guests = 20
 
     dell = False
 
     if dell:
         create.dell_all_db(app, db, dell)
     else:
-        create.create_all_data(cnt_admins, cnt_creators, cnt_events, cnt_guest)
+        create.create_all_data(create_types, cnt_users, cnt_events, cnt_guests)
