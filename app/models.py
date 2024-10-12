@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 db = SQLAlchemy()
 
 
-class ForeignKeyMixin:
+class ForeignKeyMixin(db.Model):
     __abstract__ = True
 
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)
@@ -35,12 +35,22 @@ class User(db.Model):
     events = db.relationship('Event', backref='created_events', lazy=True, cascade='all, delete-orphan')
 
 
+# Модель типа мероприятия
+class EventType(db.Model):
+    __tablename__ = 'types_events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
+    events = db.relationship('Event', backref='types_events', lazy=True)
+
+
 # Модель Мероприятия
 class Event(db.Model):
     __tablename__ = 'events'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    event_type_id = db.Column(db.Integer, db.ForeignKey('types_events.id'), nullable=False)
+    # name = db.Column(db.String, nullable=False)
     date = db.Column(db.Date)
     time = db.Column(db.Time)
     location = db.Column(db.String)
@@ -54,7 +64,7 @@ class GuestType(db.Model):
     __tablename__ = 'guest_types'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, unique=True, nullable=False)
 
 
 # Модель типов приветствия гостей
@@ -80,14 +90,14 @@ class Guest(db.Model):
     surname = db.Column(db.String)
     details = db.Column(db.String)
 
-    ask_plus_one = db.Column(db.Boolean)
+    ask_plus_one = db.Column(db.Boolean, default=True)
     plus_ones = db.relationship('PlusOne', backref='guest', lazy=True, cascade='all, delete-orphan')
 
-    ask_children = db.Column(db.Boolean)
+    ask_children = db.Column(db.Boolean, default=False)
     children_count = db.Column(db.Integer, default=0)
     children = db.relationship('Child', backref='guest', lazy=True, cascade='all, delete-orphan')
 
-    make_paper_invitation = db.Column(db.Boolean)
+    make_paper_invitation = db.Column(db.Boolean, default=True)
 
     comments = db.relationship('Comment', backref='guest', lazy=True, cascade='all, delete-orphan')
     responses = db.relationship('Response', backref='guest', lazy=True, cascade='all, delete-orphan')
@@ -98,7 +108,7 @@ class Guest(db.Model):
 
 
 # Модель +1 гостя
-class PlusOne(db.Model, ForeignKeyMixin):
+class PlusOne(ForeignKeyMixin):
     __tablename__ = 'plus_one'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -108,7 +118,7 @@ class PlusOne(db.Model, ForeignKeyMixin):
 
 
 # Модель Ребёнка
-class Child(db.Model, ForeignKeyMixin):
+class Child(ForeignKeyMixin):
     __tablename__ = 'children'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -118,7 +128,7 @@ class Child(db.Model, ForeignKeyMixin):
 
 
 # Модель Комментария
-class Comment(db.Model, ForeignKeyMixin):
+class Comment(ForeignKeyMixin):
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -134,7 +144,7 @@ class ResponseOption(db.Model):
 
 
 # Модель для Ответа на приглашение
-class Response(db.Model, ForeignKeyMixin):
+class Response(ForeignKeyMixin):
     __tablename__ = 'responses'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -142,7 +152,7 @@ class Response(db.Model, ForeignKeyMixin):
 
 
 # Модель Короткой ссылки
-class ShortLink(db.Model, ForeignKeyMixin):
+class ShortLink(ForeignKeyMixin):
     __tablename__ = 'short_links'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -152,7 +162,7 @@ class ShortLink(db.Model, ForeignKeyMixin):
 
 
 # Модель QR-кода
-class QRCode(db.Model, ForeignKeyMixin):
+class QRCode(ForeignKeyMixin):
     __tablename__ = 'qr_codes'
 
     id = db.Column(db.Integer, primary_key=True)

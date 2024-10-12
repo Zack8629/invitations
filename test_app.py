@@ -16,6 +16,14 @@ class CreateAppData:
             with _app.app_context():
                 _db.drop_all()
                 print(f'All db data has been deleted')
+                print()
+
+    @staticmethod
+    def create_db(_app, _db):
+        with _app.app_context():
+            _db.create_all()
+            print(f'DB created')
+            print()
 
     def send_post_request(self, post_url, data):
         response = requests.post(self.base_url + post_url, data=data)
@@ -71,18 +79,23 @@ class CreateAppData:
 
             for i in range(quantity):
                 i = i + 1
+                # data = {
+                    # 'name': f'{i}Мероприятие',
+                    # 'user_id': i,
+                # }
                 data = {
-                    'name': f'{i}Мероприятие',
+                    'event_type_id': 1,
                     'user_id': i,
+                    'date': f'9999-12-{i}',
                 }
                 post_url = '/admin/event/new/?url=/admin/event/'
 
                 code = self.send_post_request(post_url, data)
 
                 if code == 200:
-                    print(f'Мероприятие: "{data['name']}" успешно создано! Код ответа:{code}')
+                    print(f'Мероприятие номер "{i}" успешно создано! Код ответа:{code}')
                 else:
-                    print(f'Ошибка при создании мероприятия: "{data['name']}"! Код ответа:{code}')
+                    print(f'Ошибка при создании мероприятия номер "{i}"! Код ответа:{code}')
             print()
 
     def create_guest_type(self):
@@ -158,6 +171,22 @@ class CreateAppData:
                 print(f'Ошибка при создании типа ответа: "{data['response']}"! Код ответа:{code}')
         print()
 
+    def create_event_type(self):
+        event_types = ('Свадьба', 'Годовщина', 'День рождения')
+        for event in event_types:
+            data = {
+                'name': f'{event}',
+            }
+            post_url = '/admin/eventtype/new/?url=/admin/eventtype/'
+
+            code = self.send_post_request(post_url, data)
+
+            if code == 200:
+                print(f'Тип мероприятия: "{data['name']}" успешно создан! Код ответа:{code}')
+            else:
+                print(f'Ошибка при создании типа мероприятия: "{data['name']}"! Код ответа:{code}')
+        print()
+
     def create_all_data(self, _create_types, _cnt_users, _cnt_events, _cnt_guests):
         try:
             if _create_types:
@@ -166,6 +195,7 @@ class CreateAppData:
                 self.create_guest_type()
                 self.create_salutation_type()
                 self.create_response_option()
+                self.create_event_type()
                 print()
 
             self.create_users(_cnt_users)
@@ -179,15 +209,23 @@ class CreateAppData:
 if __name__ == '__main__':
     create = CreateAppData(BASE_URL)
 
-    create_types = True
+    create_types = False
 
-    cnt_users = 20
-    cnt_events = 20
-    cnt_guests = 20
+    cnt_users = 2
+    cnt_events = 2
+    cnt_guests = 2
 
+    all_works = True
     dell = False
+    create_data = True
 
-    if dell:
+    if all_works:
+        create.dell_all_db(app, db, True)
+        create.create_db(app, db)
+        create.create_all_data(True, cnt_users, cnt_events, cnt_guests)
+
+    elif dell:
         create.dell_all_db(app, db, dell)
-    else:
+
+    elif create_data:
         create.create_all_data(create_types, cnt_users, cnt_events, cnt_guests)

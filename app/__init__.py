@@ -5,12 +5,12 @@ from flask_admin.menu import MenuLink
 
 from .models import (
     db, Role, User, Event, GuestType, SalutationType, Guest, PlusOne, Child, Comment, ResponseOption, Response,
-    ShortLink, QRCode,
+    ShortLink, QRCode, EventType,
 )
 from .views import (
     RoleModelView, UserModelView, EventModelView, GuestTypeModelView, SalutationTypeModelView, GuestModelView,
     PlusOneModelView, ChildModelView, CommentModelView, ResponseOptionModelView, ResponseModelView, ShortLinkModelView,
-    QRCodeModelView
+    QRCodeModelView, EventTypeModelView
 )
 
 
@@ -30,6 +30,7 @@ def create_app(flask):
             admin.add_view(RoleModelView(Role, db.session, name='Роли'))
             admin.add_view(UserModelView(User, db.session, name='Пользователи'))
 
+            admin.add_view(EventTypeModelView(EventType, db.session, name='Тип мероприятия'))
             admin.add_view(EventModelView(Event, db.session, name='Мероприятия'))
 
             admin.add_view(GuestTypeModelView(GuestType, db.session, name='Типы гостей'))

@@ -3,7 +3,7 @@ from markupsafe import Markup
 from wtforms import SelectField
 from wtforms.fields.simple import StringField, URLField
 
-from app.models import db, User, Event, GuestType, SalutationType, ShortLink, QRCode, Role
+from app.models import db, User, Event, GuestType, SalutationType, ShortLink, QRCode, Role, EventType
 from app.services import crypto, link_shortener, generate_qr
 
 
@@ -33,9 +33,14 @@ class UserModelView(ModelView):
         return form
 
 
+class EventTypeModelView(ModelView):
+    pass
+
+
 class EventModelView(ModelView):
     form_extra_fields = {
         'user_id': SelectField('Creator', coerce=int),
+        'event_type_id': SelectField('Тип мероприятия', coerce=int),
         'hash_id': StringField('Hash id', render_kw={'readonly': True}),
     }
 
@@ -46,7 +51,7 @@ class EventModelView(ModelView):
              f'{user.name}' if user.surname is None else f'{user.name} {user.surname}')
             for user in User.query.all()
         ]
-        form.hash_id.render_kw = {'readonly': True}
+        form.event_type_id.choices = [(event_type.id, event_type.name) for event_type in EventType.query.all()]
 
         return form
 
@@ -102,7 +107,10 @@ class GuestModelView(ModelView):
     def on_model_change(self, form, model, is_created):
         if is_created:
             event_id = form.event_id.data
-            hash_event = Event.query.get(event_id).hash_id
+
+            with db.session.no_autoflush:
+                hash_event = Event.query.get(event_id).hash_id
+
             hash_guest = crypto.encrypt_data(model.id)
 
             model.hash_id = hash_guest
@@ -111,7 +119,10 @@ class GuestModelView(ModelView):
             short_url = link_shortener.generate_short_url(original_url)
 
             short_link_obj = ShortLink(
-                short_url=short_url, original_url=original_url, event_id=event_id, guest_id=model.id,
+                short_url=short_url,
+                original_url=original_url,
+                event_id=event_id,
+                guest_id=model.id,
             )
 
             svg_data = generate_qr.gen_text(short_url)
